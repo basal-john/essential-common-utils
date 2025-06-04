@@ -15,7 +15,11 @@ export const generateRandomArrayIndex = (arrayLength: number = 5): number => Mat
  * @param {number} maxValue - The maximum value for the random number.
  * @returns {number} A random number between 1 and maxValue (or 1 if length is invalid).
  */
-export const generateRandomNumber = (maxValue: number = 5): number => Math.floor(Math.random() * maxValue) || 1;
+export const generateRandomNumber = (maxValue: number = 5): number => {
+    if (maxValue <= 0) return 1;
+
+    return Math.floor(Math.random() * maxValue) + 1;
+};
 
 /**
  * Trims a string and removes all spaces.

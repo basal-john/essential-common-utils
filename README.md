@@ -1,6 +1,6 @@
 # Essential common utilities
 
-A collection of essesntial utility functions for various common operations in JavaScript and TypeScript projects. The `essential-common-utils` package provides a set of reusable functions for string manipulation, number formatting, URL extraction, and more.
+A collection of essential utility functions for various common operations in JavaScript and TypeScript projects. The `essential-common-utils` package provides a set of reusable functions for string manipulation, number formatting, URL extraction, and more.
 
 ## Utility Functions
 
@@ -128,7 +128,7 @@ Capitalizes the first word and makes the rest lowercase.
 - **Example**:
     ```typescript
     const result = capitalizeFirstWord('hello world');
-    // Output: "Hello world"
+    // Output: "Hello"
     ```
 
 ---
