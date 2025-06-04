@@ -36,11 +36,11 @@ test('generateRandomArrayIndex should return  0 if the array has length 1', () =
 });
 
 test('generateRandomNumber should return a number within range', () => {
-    const arrayLength = 10;
-    const index = generateRandomNumber(arrayLength);
+    const maxValue = 10;
+    const number = generateRandomNumber(maxValue);
 
-    expect(index).toBeGreaterThanOrEqual(0);
-    expect(index).toBeLessThan(arrayLength);
+    expect(number).toBeGreaterThanOrEqual(1);
+    expect(number).toBeLessThanOrEqual(maxValue);
 });
 
 test('trimAndRemoveSpaces should remove spaces from a string', () => {
@@ -125,13 +125,14 @@ test('getPascalCaseText should convert text to PascalCase', () => {
     expect(getPascalCaseText('!@#$%^&*()')).toBe('');
 });
 
-test('getExecutionTime should calculate the execution time in seconds', () => {
+test('getExecutionTime should calculate the execution time in seconds', (done) => {
     const startTime = Date.now();
     // Simulate some delay
     setTimeout(() => {
         const executionTime = getExecutionTime(startTime);
 
         expect(parseFloat(executionTime)).toBeGreaterThan(0);
+        done();
     }, 100);
 });
 
