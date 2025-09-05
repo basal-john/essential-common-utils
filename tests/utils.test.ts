@@ -18,7 +18,7 @@ import {
     getRandomString,
     parsePricesWithLocaleFormatting,
     generateRandomNumber,
-    textHelper,
+    textHelper, convertToUSPriceFormat,
 } from '../src/Common';
 
 test('generateRandomArrayIndex should return a number within range', () => {
@@ -273,5 +273,16 @@ describe('textHelper', () => {
         testCases.forEach(({actual, expected, result}) => {
             expect(textHelper.compareTexts(actual, expected)).toBe(result);
         });
+    });
+
+    test('should format whole numbers without .00', () => {
+        expect(convertToUSPriceFormat(1699)).toBe('1,699');
+        expect(convertToUSPriceFormat(0)).toBe('0');
+        expect(convertToUSPriceFormat(1000000)).toBe('1,000,000');
+    });
+
+    test('should format numbers with decimals correctly', () => {
+        expect(convertToUSPriceFormat(1234.56)).toBe('1,234.56');
+        expect(convertToUSPriceFormat(0.99)).toBe('0.99');
     });
 });

@@ -102,6 +102,27 @@ export const convertToEuropeFormat = (value: number): string =>
     });
 
 /**
+ * Converts a numeric value to a US-style formatted price string.
+ *
+ * - Uses comma as thousands separator.
+ * - Omits trailing ".00" for whole numbers.
+ * - Retains up to 2 decimal places for fractional values.
+ *
+ * @param {number} value - The numeric value to format.
+ * @returns {string} The formatted price string in US style.
+ *
+ * @example
+ * convertToUSPriceFormat(1699);      // "1,699"
+ * convertToUSPriceFormat(1234567.89);// "1,234,567.89"
+ */
+export const convertToUSPriceFormat=(value:number)=>{
+    return Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+    }).format(value);
+}
+
+/**
  * Converts a string to camelCase.
  * Removes all non-alphabetic characters and converts the result to camelCase,
  * where the first word is in lowercase and subsequent words are capitalized.
