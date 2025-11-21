@@ -344,6 +344,34 @@ export const parsePricesWithLocaleFormatting = (priceText: string): number => {
     return Number(cleanedText.replace(/,/g, ''));
 };
 
+/**
+ * Normalizes a price string (European or US format) into a decimal number string.
+ *
+ * Supported examples:
+ *  - "12,99 €"      → "12.99"
+ *  - "€12,99"       → "12.99"
+ *  - "12.99 €"      → "12.99"
+ *  - "1.234,56 €"   → "1234.56"
+ *  - "2,500.00 EUR" → "2500.00"
+ *
+ * Behavior:
+ *  - Extracts the first valid number (with comma or dot decimals).
+ *  - Removes thousand separators (dot or comma).
+ *  - Converts comma decimals → dot decimals.
+ *  - Returns "0" if no number exists.
+ *
+ * @param {string | null} input - Raw price string containing a numeric value.
+ * @returns {string} A normalized number string using dot notation ("1234.56").
+ */
+export function normalizePriceString(input: string | null): string {
+    if (!input) return '0';
+
+    const match = input.match(/(\d{1,3}(?:[.,]\d{3})*|\d+)([.,]\d+)?/);
+    if (!match) return '0';
+
+    return match[0].replace(/\./g, '').replace(',', '.');
+}
+
 const HTML_ENTITIES: Record<string, string> = {
     '&amp;': '&',
     '&lt;': '<',

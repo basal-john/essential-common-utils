@@ -19,6 +19,7 @@ import {
     parsePricesWithLocaleFormatting,
     generateRandomNumber,
     textHelper, convertToUSPriceFormat,
+    normalizePriceString,
 } from '../src/Common';
 
 test('generateRandomArrayIndex should return a number within range', () => {
@@ -202,6 +203,14 @@ test('parsePricesWithLocaleFormatting should correctly parse prices with differe
     expect(parsePricesWithLocaleFormatting('abc')).toBe(0);
     expect(parsePricesWithLocaleFormatting('1.2.3')).toBe(123); // Ambiguous case, assumes US format
     expect(parsePricesWithLocaleFormatting('1,2,3')).toBe(123); // Ambiguous case, assumes US format
+});
+
+test('should normalize a European price with comma decimal', () => {
+    expect(normalizePriceString('12,99 €')).toBe('12.99');
+});
+
+test('should normalize a price where € comes before the number', () => {
+    expect(normalizePriceString('€12,99')).toBe('12.99');
 });
 
 describe('textHelper', () => {
