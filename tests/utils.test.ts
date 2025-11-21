@@ -18,7 +18,8 @@ import {
     getRandomString,
     parsePricesWithLocaleFormatting,
     generateRandomNumber,
-    textHelper, convertToUSPriceFormat,
+    textHelper,
+    convertToUSPriceFormat,
     normalizePriceString,
 } from '../src/Common';
 

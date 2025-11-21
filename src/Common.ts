@@ -119,12 +119,12 @@ export const convertToEuropeFormat = (value: number): string =>
  * convertToUSPriceFormat(1699);      // "1,699"
  * convertToUSPriceFormat(1234567.89);// "1,234,567.89"
  */
-export const convertToUSPriceFormat=(value:number)=>{
+export const convertToUSPriceFormat = (value: number) => {
     return Intl.NumberFormat('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     }).format(value);
-}
+};
 
 /**
  * Converts a string to camelCase.

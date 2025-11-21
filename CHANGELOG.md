@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [1.10.0](https://github.com/basal-john/essential-common-utils/compare/v1.9.3...v1.10.0) (2025-09-05)
 
-
 ### Features
 
-* function to format us price ([fa5585b](https://github.com/basal-john/essential-common-utils/commit/fa5585b4950b61667317ec8ca61c1d42b9a48944))
+- function to format us price ([fa5585b](https://github.com/basal-john/essential-common-utils/commit/fa5585b4950b61667317ec8ca61c1d42b9a48944))
 
 ### [1.9.3](https://github.com/basal-john/essential-common-utils/compare/v1.9.2...v1.9.3) (2025-07-01)
 
