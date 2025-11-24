@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/basal-john/essential-common-utils/compare/v1.10.0...v1.11.0) (2025-11-24)
+
+
+### Features
+
+* add function normalizePriceString to normalize price string ([771d818](https://github.com/basal-john/essential-common-utils/commit/771d818a814af4b603824e40dc29f201bddff585))
+
 ## [1.10.0](https://github.com/basal-john/essential-common-utils/compare/v1.9.3...v1.10.0) (2025-09-05)
 
 ### Features
