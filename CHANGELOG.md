@@ -2,12 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.11.0](https://github.com/basal-john/essential-common-utils/compare/v1.10.0...v1.11.0) (2025-11-24)
+### [1.12.1](https://github.com/basal-john/essential-common-utils/compare/v1.11.0...v1.12.1) (2026-02-12)
 
+## [1.12.0](https://github.com/basal-john/essential-common-utils/compare/v1.11.0...v1.12.0) (2026-02-12)
 
 ### Features
 
-* add function normalizePriceString to normalize price string ([771d818](https://github.com/basal-john/essential-common-utils/commit/771d818a814af4b603824e40dc29f201bddff585))
+- improve package metadata with explicit `exports`, `sideEffects`, and safer publish checks
+- modernize CI matrix and workflows (Node 20/22, GitHub Actions v4, separate format check)
+- refresh dependencies and lockfile to current compatible versions
+
+### Bug Fixes
+
+- make `extractUrlsFromText` return an empty array when no links are found
+- fix `normalizePriceString` for US thousands+decimal formats (for example `2,500.00`)
+- support Unicode letters in `getPascalCaseText`
+- collapse repeated spaces consistently in `trimAndRemoveDoubleSpaces`
+- remove noisy console side effects from `textHelper.compareTexts`
+
+## [1.11.0](https://github.com/basal-john/essential-common-utils/compare/v1.10.0...v1.11.0) (2025-11-24)
+
+### Features
+
+- add function normalizePriceString to normalize price string ([771d818](https://github.com/basal-john/essential-common-utils/commit/771d818a814af4b603824e40dc29f201bddff585))
 
 ## [1.10.0](https://github.com/basal-john/essential-common-utils/compare/v1.9.3...v1.10.0) (2025-09-05)
 
