@@ -37,6 +37,11 @@ test('generateRandomArrayIndex should return  0 if the array has length 1', () =
     expect(index).toEqual(0);
 });
 
+test('generateRandomArrayIndex should return 0 for non-positive array length', () => {
+    expect(generateRandomArrayIndex(0)).toBe(0);
+    expect(generateRandomArrayIndex(-5)).toBe(0);
+});
+
 test('generateRandomNumber should return a number within range', () => {
     const maxValue = 10;
     const number = generateRandomNumber(maxValue);
@@ -56,9 +61,14 @@ test('extractUrlsFromText should extract URLs from text', () => {
     expect(urls).toEqual(['https://example.com', 'http://test.com']);
 });
 
+test('extractUrlsFromText should return empty array when no URL is found', () => {
+    expect(extractUrlsFromText('No links here')).toEqual([]);
+});
+
 test('trimAndRemoveDoubleSpaces should remove double spaces from a string', () => {
     expect(trimAndRemoveDoubleSpaces('hello  world')).toBe('hello world');
     expect(trimAndRemoveDoubleSpaces('  hello  world  ')).toBe('hello world');
+    expect(trimAndRemoveDoubleSpaces('hello    world')).toBe('hello world');
 });
 
 test('trimAndRemoveUnicodeCharacter should remove specific Unicode characters from a string', () => {
@@ -125,6 +135,8 @@ test('getPascalCaseText should convert text to PascalCase', () => {
     expect(getPascalCaseText('123 Number 4 Test!')).toBe('NumberTest');
     expect(getPascalCaseText('')).toBe('');
     expect(getPascalCaseText('!@#$%^&*()')).toBe('');
+    expect(getPascalCaseText('Schön, Sie kennenzulernen')).toBe('SchönSieKennenzulernen');
+    expect(getPascalCaseText('Crème brûlée')).toBe('CrèmeBrûlée');
 });
 
 test('getExecutionTime should calculate the execution time in seconds', (done) => {
@@ -158,6 +170,8 @@ test('getMultipleUniqueNumbers should return an array of unique numbers', () => 
     expect(getMultipleUniqueIndexes(5, 2)).toHaveLength(2);
     expect(getMultipleUniqueIndexes(5, 5)).toHaveLength(5);
     expect(getMultipleUniqueIndexes(5, 6)).toHaveLength(5);
+    expect(getMultipleUniqueIndexes(0, 2)).toEqual([]);
+    expect(getMultipleUniqueIndexes(5, 0)).toEqual([]);
 });
 
 test('getRandomString should return a random item from the provided array', () => {
@@ -212,6 +226,11 @@ test('should normalize a European price with comma decimal', () => {
 
 test('should normalize a price where € comes before the number', () => {
     expect(normalizePriceString('€12,99')).toBe('12.99');
+});
+
+test('should normalize US-style prices with thousand and decimal separators', () => {
+    expect(normalizePriceString('2,500.00 EUR')).toBe('2500.00');
+    expect(normalizePriceString('$1,234')).toBe('1234');
 });
 
 describe('textHelper', () => {
@@ -284,6 +303,15 @@ describe('textHelper', () => {
         testCases.forEach(({actual, expected, result}) => {
             expect(textHelper.compareTexts(actual, expected)).toBe(result);
         });
+    });
+
+    test('compareTexts should not log output for mismatches', () => {
+        const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+        expect(textHelper.compareTexts('mismatch one', 'mismatch two')).toBe(false);
+        expect(consoleSpy).not.toHaveBeenCalled();
+
+        consoleSpy.mockRestore();
     });
 
     test('should format whole numbers without .00', () => {

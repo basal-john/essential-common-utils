@@ -6,7 +6,8 @@ import extractUrls from 'extract-urls';
  * @param {number} arrayLength - The length of the array. Default is 5.
  * @returns {number} A random index for the array.
  */
-export const generateRandomArrayIndex = (arrayLength: number = 5): number => Math.floor(Math.random() * arrayLength);
+export const generateRandomArrayIndex = (arrayLength: number = 5): number =>
+    arrayLength > 0 ? Math.floor(Math.random() * arrayLength) : 0;
 
 /**
  * Generates a random number between 1 and the given length.
@@ -35,7 +36,7 @@ export const trimAndRemoveSpaces = (input: string): string => input.trim().repla
  * @param {string} text - The text to extract URLs from.
  * @returns {string[]} An array of URLs found in the text.
  */
-export const extractUrlsFromText = (text: string): string[] => extractUrls(text);
+export const extractUrlsFromText = (text: string): string[] => extractUrls(text) ?? [];
 
 /**
  * Trims a string and removes double spaces.
@@ -43,7 +44,7 @@ export const extractUrlsFromText = (text: string): string[] => extractUrls(text)
  * @param {string} input - The string to trim and remove double spaces from.
  * @returns {string} The input string without double spaces.
  */
-export const trimAndRemoveDoubleSpaces = (input: string): string => input?.trim().replaceAll('  ', ' ') ?? '';
+export const trimAndRemoveDoubleSpaces = (input: string): string => input.trim().replace(/ {2,}/g, ' ');
 
 /**
  * Trims a string and removes a specific Unicode character.
@@ -152,8 +153,8 @@ export const getCamelCaseText = (text: string): string => {
  */
 export const getPascalCaseText = (text: string): string => {
     const words = text
-        .replace(/[^a-zA-Z ]+/g, ' ')
-        .split(' ')
+        .replace(/[^\p{L}\s]+/gu, ' ')
+        .split(/\s+/)
         .filter(Boolean);
 
     return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('');
@@ -206,6 +207,10 @@ export const trimToTwoDecimalPlaces = (num: number): number => {
  * getMultipleUniqueNumbers(10, 12); // Example output: [3, 9, 4, 2, 5, 7, 1, 8, 10]
  */
 export const getMultipleUniqueIndexes = (length: number, count = 1): number[] => {
+    if (length <= 0 || count <= 0) {
+        return [];
+    }
+
     if (count > length) {
         count = length;
     }
@@ -366,10 +371,47 @@ export const parsePricesWithLocaleFormatting = (priceText: string): number => {
 export function normalizePriceString(input: string | null): string {
     if (!input) return '0';
 
-    const match = input.match(/(\d{1,3}(?:[.,]\d{3})*|\d+)([.,]\d+)?/);
-    if (!match) return '0';
+    const cleaned = input.replace(/[^\d.,-]/g, '');
+    if (!cleaned || cleaned === '-') return '0';
 
-    return match[0].replace(/\./g, '').replace(',', '.');
+    const commaCount = (cleaned.match(/,/g) || []).length;
+    const periodCount = (cleaned.match(/\./g) || []).length;
+    const lastCommaIndex = cleaned.lastIndexOf(',');
+    const lastPeriodIndex = cleaned.lastIndexOf('.');
+    const isNegative = cleaned.startsWith('-');
+
+    const integerOnly = cleaned.replace(/[^\d]/g, '') || '0';
+    const toSignedString = (value: string) => (isNegative && value !== '0' ? `-${value}` : value);
+
+    if (!commaCount && !periodCount) {
+        return toSignedString(cleaned.replace(/[^\d]/g, '') || '0');
+    }
+
+    let decimalSeparator: ',' | '.' | null = null;
+    if (commaCount > 0 && periodCount > 0) {
+        decimalSeparator = lastCommaIndex > lastPeriodIndex ? ',' : '.';
+    } else if (commaCount === 1 && periodCount === 0) {
+        decimalSeparator = cleaned.length - lastCommaIndex - 1 === 3 ? null : ',';
+    } else if (periodCount === 1 && commaCount === 0) {
+        decimalSeparator = cleaned.length - lastPeriodIndex - 1 === 3 ? null : '.';
+    } else if (commaCount > 1 && periodCount === 0) {
+        decimalSeparator = cleaned.length - lastCommaIndex - 1 === 3 ? null : ',';
+    } else if (periodCount > 1 && commaCount === 0) {
+        decimalSeparator = cleaned.length - lastPeriodIndex - 1 === 3 ? null : '.';
+    }
+
+    if (!decimalSeparator) {
+        return toSignedString(integerOnly.replace(/[^\d]/g, '') || '0');
+    }
+
+    const decimalIndex = decimalSeparator === ',' ? lastCommaIndex : lastPeriodIndex;
+    const integerPart = cleaned.slice(0, decimalIndex).replace(/[^\d]/g, '') || '0';
+    const decimalPart = cleaned.slice(decimalIndex + 1).replace(/[^\d]/g, '');
+    if (!decimalPart) {
+        return toSignedString(integerPart);
+    }
+
+    return toSignedString(`${integerPart}.${decimalPart}`);
 }
 
 const HTML_ENTITIES: Record<string, string> = {
@@ -450,16 +492,6 @@ export const textHelper = {
     compareTexts(actual: string, expected: string): boolean {
         const normalizedActual = this.normalizeText(actual);
         const normalizedExpected = this.normalizeText(expected);
-
-        // Debug logging to help identify issues
-        if (normalizedActual !== normalizedExpected) {
-            console.log('Text comparison failed:');
-            console.log('Original actual  :', actual);
-            console.log('Original expected:', expected);
-            console.log('Normalized actual:', normalizedActual);
-            console.log('Normalized expect:', normalizedExpected);
-        }
-
         return normalizedActual === normalizedExpected;
     },
 };

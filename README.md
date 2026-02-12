@@ -47,7 +47,7 @@ Extracts URLs from a given text.
 
 ### 4. `trimAndRemoveDoubleSpaces`
 
-Trims a string and removes double spaces.
+Trims a string and collapses repeated spaces to a single space.
 
 - **Parameters**: `input` (string)
 - **Returns**: A string without double spaces.
@@ -163,7 +163,7 @@ Converts a string to camelCase.
 
 ### 12. `getPascalCaseText`
 
-Converts a string to PascalCase.
+Converts a string to PascalCase (including Unicode letters).
 
 - **Parameters**: `text` (string)
 - **Returns**: A PascalCase string.
@@ -285,7 +285,7 @@ Normalizes text by decoding HTML entities and standardizing special characters.
 - **Returns**: The normalized text
 - **Example**:
     ```typescript
-    const normalized = textHelper.normalizeText('"Smart quotes" and 'apostrophes'');
+    const normalized = textHelper.normalizeText(`"Smart quotes" and 'apostrophes'`);
     // Output: '"Smart quotes" and \'apostrophes\''
     ```
 
@@ -307,10 +307,10 @@ Compares two strings after normalization.
 
 ## Usage
 
-To use these utilities, import them from the `Common.ts` file in your project. For example:
+To use these utilities, import them from the package directly. For example:
 
 ```typescript
-import {generateRandomArrayIndex, trimAndRemoveSpaces} from './src/Common';
+import {generateRandomArrayIndex, trimAndRemoveSpaces} from 'essential-common-utils';
 
 const index = generateRandomArrayIndex(10);
 const text = trimAndRemoveSpaces(' Hello World ');
