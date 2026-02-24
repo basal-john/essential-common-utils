@@ -21,6 +21,12 @@ import {
     textHelper,
     convertToUSPriceFormat,
     normalizePriceString,
+    normalizeAmount,
+    amountWithoutCurrency,
+    localizedPrice,
+    parsePriceFromDatabase,
+    extractCurrencySymbol,
+    roundThePriceToTwoDecimals,
 } from '../src/Common';
 
 test('generateRandomArrayIndex should return a number within range', () => {
@@ -231,6 +237,47 @@ test('should normalize a price where € comes before the number', () => {
 test('should normalize US-style prices with thousand and decimal separators', () => {
     expect(normalizePriceString('2,500.00 EUR')).toBe('2500.00');
     expect(normalizePriceString('$1,234')).toBe('1234');
+});
+
+describe('money helpers', () => {
+    test('normalizeAmount should parse localized values and numbers', () => {
+        expect(normalizeAmount('€2.345,67')).toBeCloseTo(2345.67);
+        expect(normalizeAmount('$2,345.67')).toBeCloseTo(2345.67);
+        expect(normalizeAmount(1234.56)).toBe(1234.56);
+        expect(normalizeAmount('No number')).toBe(0);
+    });
+
+    test('amountWithoutCurrency should parse amount strings', () => {
+        expect(amountWithoutCurrency('€2.345,67')).toBeCloseTo(2345.67);
+        expect(amountWithoutCurrency('$2,345.67')).toBeCloseTo(2345.67);
+        expect(amountWithoutCurrency('No number')).toBe(0);
+    });
+
+    test('localizedPrice should format according to locale', () => {
+        expect(localizedPrice(1234, 'en-US')).toBe('1,234');
+        expect(localizedPrice(1234.56, 'en-US')).toBe('1,234.56');
+        expect(localizedPrice(1234.56, 'de-DE')).toBe('1.234,56');
+    });
+
+    test('parsePriceFromDatabase should parse number and string values', () => {
+        expect(parsePriceFromDatabase('1234.56')).toBeCloseTo(1234.56);
+        expect(parsePriceFromDatabase(1234.56)).toBe(1234.56);
+    });
+
+    test('parsePriceFromDatabase should throw for empty values', () => {
+        expect(() => parsePriceFromDatabase()).toThrow('Price is empty. Please check your data from DataBase');
+    });
+
+    test('extractCurrencySymbol should find symbol or code', () => {
+        expect(extractCurrencySymbol('€1.234,56')).toBe('€');
+        expect(extractCurrencySymbol('1,234.56 USD')).toBe('USD');
+        expect(extractCurrencySymbol('1,234.56')).toBe('');
+    });
+
+    test('roundThePriceToTwoDecimals should round correctly', () => {
+        expect(roundThePriceToTwoDecimals(123.456)).toBe(123.46);
+        expect(roundThePriceToTwoDecimals(123)).toBe(123);
+    });
 });
 
 describe('textHelper', () => {

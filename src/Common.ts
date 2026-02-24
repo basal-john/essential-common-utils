@@ -414,6 +414,122 @@ export function normalizePriceString(input: string | null): string {
     return toSignedString(`${integerPart}.${decimalPart}`);
 }
 
+const extractNumericToken = (amount: string): string | undefined => {
+    const matched = amount.match(/[-+]?\d[\d,.\s]*/)?.[0];
+
+    return matched ? matched.replace(/\s/g, '') : undefined;
+};
+
+const getDecimalSeparator = (amount: string): '.' | ',' | undefined => {
+    const lastDot = amount.lastIndexOf('.');
+    const lastComma = amount.lastIndexOf(',');
+
+    if (lastDot === -1 && lastComma === -1) {
+        return undefined;
+    }
+    if (lastDot !== -1 && lastComma !== -1) {
+        return lastDot > lastComma ? '.' : ',';
+    }
+    const separator = lastDot === -1 ? ',' : '.';
+    const splitBySeparator = amount.split(separator);
+
+    if (splitBySeparator.length > 2) {
+        return undefined;
+    }
+    const fractionalLength = splitBySeparator[1]?.length ?? 0;
+    return fractionalLength > 0 && fractionalLength <= 2 ? separator : undefined;
+};
+
+/**
+ * Converts localized amount input into a plain number.
+ * Accepts strings with currency symbols/separators and number inputs.
+ *
+ * @param {string | number} amount - Localized amount input.
+ * @returns {number} Normalized numeric amount.
+ */
+export const normalizeAmount = (amount: string | number): number => {
+    if (typeof amount === 'number') {
+        return Number.isFinite(amount) ? amount : 0;
+    }
+    const numericToken = extractNumericToken(amount);
+
+    if (numericToken === undefined) {
+        return 0;
+    }
+    const decimalSeparator = getDecimalSeparator(numericToken);
+    let normalized = numericToken;
+    if (decimalSeparator) {
+        const thousandsSeparator = decimalSeparator === '.' ? ',' : '.';
+
+        normalized = normalized.split(thousandsSeparator).join('');
+        normalized = normalized.replace(decimalSeparator, '.');
+    } else {
+        normalized = normalized.replace(/[,.]/g, '');
+    }
+    const parsed = Number.parseFloat(normalized);
+
+    return Number.isFinite(parsed) ? parsed : 0;
+};
+
+/**
+ * Extracts numeric amount from a localized price string.
+ *
+ * @param {string} amount - Price string that may include currency symbols.
+ * @returns {number} Parsed numeric value.
+ */
+export const amountWithoutCurrency = (amount: string): number => normalizeAmount(amount);
+
+/**
+ * Formats price with locale-aware grouping and decimal separators.
+ *
+ * @param {number} price - Numeric price value.
+ * @param {string} formattingLocale - Locale used for formatting.
+ * @returns {string} Locale-formatted price string.
+ */
+export const localizedPrice = (price: number, formattingLocale: string): string =>
+    Number.isInteger(price)
+        ? price.toLocaleString(formattingLocale)
+        : price.toLocaleString(formattingLocale, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+/**
+ * Parses price values coming from database strings or numbers.
+ * Throws when the value is missing.
+ *
+ * @param {string | number | undefined} price - Raw price from persistence.
+ * @returns {number} Numeric price value.
+ */
+export const parsePriceFromDatabase = (price?: string | number): number => {
+    if (!price) {
+        throw new Error('Price is empty. Please check your data from DataBase');
+    }
+
+    return typeof price === 'number' ? price : normalizeAmount(price);
+};
+
+/**
+ * Extracts the first visible currency symbol/code from a price string.
+ *
+ * @param {string} price - Price string containing currency marker.
+ * @returns {string} Extracted currency symbol or empty string.
+ */
+export const extractCurrencySymbol = (price: string): string => {
+    const currencyPattern = /[€$£¥₹₽₩฿₪₦₴₵₡₨₮₱₲]|[A-Z]{3}\b/g;
+    const matches = price.match(currencyPattern);
+
+    if (matches && matches.length > 0) {
+        return matches[0].trim();
+    }
+    return price.replace(/[\d\s,.:;-]/g, '').trim();
+};
+
+/**
+ * Rounds a number to two decimal places.
+ *
+ * @param {number} price - Numeric price value.
+ * @returns {number} Rounded price.
+ */
+export const roundThePriceToTwoDecimals = (price: number): number => Number(price.toFixed(2));
+
 const HTML_ENTITIES: Record<string, string> = {
     '&amp;': '&',
     '&lt;': '<',
