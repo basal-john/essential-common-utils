@@ -261,6 +261,8 @@ describe('money helpers', () => {
 
     test('parsePriceFromDatabase should parse number and string values', () => {
         expect(parsePriceFromDatabase('1234.56')).toBeCloseTo(1234.56);
+        expect(parsePriceFromDatabase('939.0000')).toBeCloseTo(939);
+        expect(parsePriceFromDatabase('7.9000')).toBeCloseTo(7.9);
         expect(parsePriceFromDatabase(1234.56)).toBe(1234.56);
     });
 

@@ -503,7 +503,13 @@ export const parsePriceFromDatabase = (price?: string | number): number => {
         throw new Error('Price is empty. Please check your data from DataBase');
     }
 
-    return typeof price === 'number' ? price : normalizeAmount(price);
+    if (typeof price === 'number') {
+        return price;
+    }
+
+    const parsedPrice = parseFloat(price);
+
+    return Number.isFinite(parsedPrice) ? parsedPrice : normalizeAmount(price);
 };
 
 /**
