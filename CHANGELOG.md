@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://github.com/basal-john/essential-common-utils/compare/v1.13.1...v1.14.0) (2026-02-25)
+
+
+### Features
+
+* add money utility functions for price normalization and formatting ([0562ceb](https://github.com/basal-john/essential-common-utils/commit/0562cebdc9e11ed5951966a5f360c833d676030f))
+
 ### [1.13.1](https://github.com/basal-john/essential-common-utils/compare/v1.12.3...v1.13.1) (2026-02-24)
 
 ### [1.12.3](https://github.com/basal-john/essential-common-utils/compare/v1.12.2...v1.12.3) (2026-02-12)
