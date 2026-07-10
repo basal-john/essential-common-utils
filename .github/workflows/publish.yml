@@ -1,0 +1,30 @@
+name: Publish
+
+on:
+    push:
+        tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+permissions:
+    contents: read
+    id-token: write
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Node.js 22.x
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22.x
+                  registry-url: 'https://registry.npmjs.org'
+                  cache: 'npm'
+            - name: Upgrade npm for trusted publishing (OIDC)
+              run: npm install -g npm@latest
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run test
+            - run: npm run build
+            - name: Publish to npm (OIDC trusted publishing with provenance)
+              run: npm publish

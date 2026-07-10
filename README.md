@@ -320,6 +320,17 @@ const text = trimAndRemoveSpaces(' Hello World ');
 
 Contributions are welcome! If you'd like to report a bug, suggest a feature, or contribute to the codebase, feel free to open an issue or submit a pull request.
 
+## Releasing
+
+Releases are published to npm by CI, not from a developer machine.
+
+1. Branch, make your changes, then bump the version with `npm run release -- --release-as <patch|minor|major> --skip.tag`. This updates `package.json` and `CHANGELOG.md` and commits them.
+2. Open a pull request and merge it into `main` once CI is green.
+3. On `main`, create and push the matching tag: `git checkout main && git pull && git tag v<version> && git push origin v<version>`.
+4. Pushing a `v*` tag triggers the `Publish` workflow, which runs lint, tests, and build, then publishes to npm via trusted publishing (OIDC). No local `npm publish` and no npm token are needed.
+
+Trusted publishing must be configured once on npmjs.com: package settings -> Publishing access -> add a GitHub Actions trusted publisher for this repository with workflow `publish.yml`.
+
 ---
 
 ## **License**
