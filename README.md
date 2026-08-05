@@ -320,6 +320,20 @@ const text = trimAndRemoveSpaces(' Hello World ');
 
 Contributions are welcome! If you'd like to report a bug, suggest a feature, or contribute to the codebase, feel free to open an issue or submit a pull request.
 
+## **Releasing**
+
+Releases are published to npm by CI, not from a developer machine. Nothing needs to be tagged or bumped by hand.
+
+1. Land changes on `main` using [Conventional Commits](https://www.conventionalcommits.org). `fix:` produces a patch, `feat:` a minor, and a `!` or `BREAKING CHANGE:` footer a major. `chore:` and `ci:` do not release.
+2. release-please keeps a release pull request open with the version bump and the `CHANGELOG.md` entry. It updates itself as more commits land.
+3. Merge that pull request. release-please tags the version, creates the GitHub release, and the same workflow run publishes to npm via trusted publishing (OIDC) with provenance. No npm token is stored anywhere.
+
+Trusted publishing must be configured once on npmjs.com: package settings, Publishing access, add a GitHub Actions trusted publisher for this repository with workflow `release.yml`.
+
+## **Dependency updates**
+
+Renovate raises dependency and GitHub Actions updates every Monday. Patch and minor updates to `devDependencies` and to Actions are approved and merged automatically once CI passes. Runtime dependencies and every major update wait for a human review.
+
 ---
 
 ## **License**
