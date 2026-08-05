@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.2](https://github.com/basal-john/essential-common-utils/compare/v1.14.1...v1.14.2) (2026-08-05)
+
+
+### Bug Fixes
+
+* **ci:** point release-please at the existing v-prefixed tags ([#16](https://github.com/basal-john/essential-common-utils/issues/16)) ([bd8d9da](https://github.com/basal-john/essential-common-utils/commit/bd8d9da5301d713dbb58b0da2c7b0929182a9cc5))
+
 ### [1.14.1](https://github.com/basal-john/essential-common-utils/compare/v1.14.0...v1.14.1) (2026-07-10)
 
 ## [1.14.0](https://github.com/basal-john/essential-common-utils/compare/v1.13.1...v1.14.0) (2026-02-25)
