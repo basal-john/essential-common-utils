@@ -1,0 +1,22 @@
+name: Renovate auto-approve
+
+on:
+    pull_request:
+        types: [opened, reopened, synchronize, labeled]
+
+permissions:
+    contents: read
+
+jobs:
+    approve:
+        if: github.actor == 'renovate[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge')
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+        steps:
+            - name: Approve so branch protection lets auto-merge complete
+              run: gh pr review "$PR_NUMBER" --repo "$REPO" --approve
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  PR_NUMBER: ${{ github.event.pull_request.number }}
+                  REPO: ${{ github.repository }}
