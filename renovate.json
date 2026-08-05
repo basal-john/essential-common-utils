@@ -1,0 +1,48 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended"],
+    "timezone": "Europe/Berlin",
+    "schedule": ["before 6am on monday"],
+    "semanticCommits": "enabled",
+    "labels": ["dependencies"],
+    "platformAutomerge": true,
+    "postUpdateOptions": ["npmDedupe"],
+    "lockFileMaintenance": {
+        "enabled": true,
+        "schedule": ["before 6am on monday"]
+    },
+    "vulnerabilityAlerts": {
+        "labels": ["dependencies", "security"],
+        "schedule": null,
+        "automerge": false
+    },
+    "packageRules": [
+        {
+            "description": "devDependencies: patch and minor updates land automatically once CI is green",
+            "matchDepTypes": ["devDependencies"],
+            "matchUpdateTypes": ["patch", "minor"],
+            "groupName": "devDependencies (non-major)",
+            "automerge": true,
+            "addLabels": ["automerge"]
+        },
+        {
+            "description": "GitHub Actions: patch, minor and digest updates land automatically once CI is green",
+            "matchManagers": ["github-actions"],
+            "matchUpdateTypes": ["patch", "minor", "digest"],
+            "groupName": "github-actions (non-major)",
+            "automerge": true,
+            "addLabels": ["automerge"]
+        },
+        {
+            "description": "Runtime dependencies ship to consumers, so they are reviewed by hand and released as a patch",
+            "matchDepTypes": ["dependencies"],
+            "semanticCommitType": "fix",
+            "automerge": false
+        },
+        {
+            "description": "Major updates are always reviewed by hand",
+            "matchUpdateTypes": ["major"],
+            "automerge": false
+        }
+    ]
+}
