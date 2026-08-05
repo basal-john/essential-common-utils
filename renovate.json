@@ -13,7 +13,7 @@
     },
     "vulnerabilityAlerts": {
         "labels": ["dependencies", "security"],
-        "schedule": null,
+        "schedule": [],
         "automerge": false
     },
     "packageRules": [
